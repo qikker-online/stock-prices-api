@@ -1,0 +1,31 @@
+{
+    "name": "qikker-online/stock-prices-api",
+    "type": "laravel-package",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Marijn Hurkens",
+            "email": "marijn@qikkeronline.nl"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "illuminate/support": "~5.7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "QikkerOnline\\StockPricesApi\\ApiServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "QikkerOnline\\StockPricesApi\\": "src/"
+        }
+    }
+}
