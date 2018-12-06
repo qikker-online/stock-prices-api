@@ -2,9 +2,7 @@
 
 namespace QikkerOnline\StockPricesApi\Drivers;
 
-
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 
 class EodApi implements StockPricesApiDriver
 {
@@ -32,16 +30,13 @@ class EodApi implements StockPricesApiDriver
      */
     public function getPrice(string $symbol)
     {
-        try {
-            $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
-                'query' => [
-                    'api_token' => $this->apiKey,
-                    'fmt'       => 'json',
-                ]
-            ]);
-        } catch (ClientException $e) {
 
-        }
+        $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
+            'query' => [
+                'api_token' => $this->apiKey,
+                'fmt'       => 'json',
+            ]
+        ]);
 
         return json_decode($response->getBody(), true);
     }
@@ -55,17 +50,15 @@ class EodApi implements StockPricesApiDriver
         $symbol  = array_shift($symbols);
         $symbols = implode(',', $symbols);
 
-        try {
-            $response = $this->guzzle->get('/api/real-time/' . $symbol, [
-                'query' => [
-                    'api_token' => $this->apiKey,
-                    'fmt'       => 'json',
-                    's'         => $symbols
-                ]
-            ]);
-        } catch (ClientException $e) {
 
-        }
+        $response = $this->guzzle->get('/api/real-time/' . $symbol, [
+            'query' => [
+                'api_token' => $this->apiKey,
+                'fmt'       => 'json',
+                's'         => $symbols
+            ]
+        ]);
+
 
         return json_decode($response->getBody(), true);
     }
@@ -81,6 +74,10 @@ class EodApi implements StockPricesApiDriver
         return $data['close'] ?? null;
     }
 
+    /**
+     * @param array $symbols
+     * @return array
+     */
     public function getBatchClosePrice(array $symbols)
     {
         $data = $this->getBatch($symbols);
@@ -88,23 +85,30 @@ class EodApi implements StockPricesApiDriver
         return $this->parseMultiple($data);
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     private function parseMultiple($data)
     {
         $final = [];
 
         $dataBuffer = $data;
+
         if (!is_array(array_values($dataBuffer)[0])) {
-            $dataBuffer = [];
+            $dataBuffer   = [];
             $dataBuffer[] = $data;
         }
 
+        // Split the code to stock symbol and exchange
+        // Also fall back to the previous closing price when the price is 'NA'
         foreach ($dataBuffer as $stock) {
-            $buffer = explode('.', $stock['code']);
+            $buffer        = explode('.', $stock['code']);
             $previousClose = $stock['previousClose'] == 'NA' ? null : $stock['previousClose'];
-            $final[] = [
-                'symbol' => $buffer[0],
+            $final[]       = [
+                'symbol'   => $buffer[0],
                 'exchange' => isset($buffer[1]) ? $buffer[1] : null,
-                'close' => $stock['close'] == 'NA' ? $previousClose : $stock['close']
+                'close'    => $stock['close'] == 'NA' ? $previousClose : $stock['close']
             ];
         }
 

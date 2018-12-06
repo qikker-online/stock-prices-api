@@ -11,10 +11,6 @@ interface StockPricesApiDriver
 
     public function getBatch(array $symbols);
 
-    /**
-     * @param string $symbol
-     * @return string|null
-     */
     public function getClosePrice(string $symbol);
 
     public function getBatchClosePrice(array $symbols);
