@@ -31,7 +31,7 @@ abstract class TestCase extends OrchestraTestCase
         // if this api is correctly called.
         //
         // $app['config']->set('stockpricesapi.api', 'for-example');
-         $app['config']->set('stockpricesapi.eod_api_key', 'for-example');
+        $app['config']->set('stockpricesapi.eod_api_key', 'for-example');
     }
 
 }
