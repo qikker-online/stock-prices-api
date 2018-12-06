@@ -22,8 +22,9 @@ class ApiServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(StockPricesApi::class);
+        $this->app->singleton('stockPricesApi', function () {
+            return (resolve(StockPricesApiManager::class))->getApi();
+        });
 
-//        $this->app->alias(StockPricesApiFacade::class, 'StockPricesApi');
     }
 }

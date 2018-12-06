@@ -110,4 +110,9 @@ class EodApi implements StockPricesApiDriver
 
         return $final;
     }
+
+    public function returnTrue(): bool
+    {
+        return true;
+    }
 }

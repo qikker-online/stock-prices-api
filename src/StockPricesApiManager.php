@@ -14,7 +14,7 @@ use Illuminate\Config\Repository;
 use QikkerOnline\StockPricesApi\Drivers\StockPricesApiDriver;
 use QikkerOnline\StockPricesApi\Drivers\EodApi;
 
-class StockPricesApi
+class StockPricesApiManager
 {
     /**
      * @var Repository
@@ -53,39 +53,7 @@ class StockPricesApi
     }
 
 
-    /**
-     * @param string $symbol
-     * @return string
-     */
-    public function getPrice(string $symbol)
-    {
-        return $this->api->getPrice($symbol);
-    }
 
-    public function getBatch(array $symbols)
-    {
-        return $this->api->getBatch($symbols);
-    }
-
-    /**
-     * @param string $symbol
-     * @return string|null
-     */
-    public function getClosePrice(string $symbol)
-    {
-        return $this->api->getClosePrice($symbol);
-    }
-
-    public function getBatchClosePrice(array $symbols)
-    {
-        return $this->api->getBatchClosePrice($symbols);
-    }
-
-
-    public function returnTrue()
-    {
-        return true;
-    }
 
 
 }
