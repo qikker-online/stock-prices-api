@@ -2,7 +2,9 @@
 
 namespace QikkerOnline\StockPricesApi;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
+use QikkerOnline\StockPricesApi\Drivers\StockPricesApiDriver;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -14,13 +16,14 @@ class ApiServiceProvider extends ServiceProvider
             __DIR__ . '/../config/stockpricesapi.php' => config_path('stockpricesapi.php'),
         ], 'config');
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/stockpricesapi.php', 'stockpricesapi');
 
     }
 
 
     public function register()
     {
-        $this->app->bind(StockPriceApi::class);
+        $this->app->singleton(StockPricesApi::class);
+
+        $this->app->alias(StockPricesApi::class, 'StockPricesApi');
     }
 }
