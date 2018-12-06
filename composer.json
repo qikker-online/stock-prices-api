@@ -23,7 +23,7 @@
         "QikkerOnline\\StockPricesApi\\ApiServiceProvider"
       ],
       "aliases": {
-        "StockPricesApi": "QikkerOnline\\StockPricesApi\\StockPricesApi"
+        "StockPricesApi": "QikkerOnline\\StockPricesApi\\StockPricesApiFacade"
       }
     }
   },

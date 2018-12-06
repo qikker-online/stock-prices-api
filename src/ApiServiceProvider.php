@@ -24,6 +24,6 @@ class ApiServiceProvider extends ServiceProvider
     {
         $this->app->singleton(StockPricesApi::class);
 
-        $this->app->alias(StockPricesApi::class, 'StockPricesApi');
+        $this->app->alias(StockPricesApiFacade::class, 'StockPricesApi');
     }
 }
