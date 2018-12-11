@@ -13,5 +13,4 @@ class ApiResponseError extends \Exception
     {
         return new static("The API responded with an Internal Server error, status code: {$statusCode}, message: '{$message}'");
     }
-
 }
