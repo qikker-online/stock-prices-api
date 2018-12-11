@@ -58,13 +58,17 @@ class EodApi implements StockPricesApiDriver
         $symbols = implode(',', $symbols);
 
 
-        $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
-            'query' => [
-                'api_token' => $this->apiKey,
-                'fmt'       => 'json',
-                's'         => $symbols
-            ]
-        ]);
+        try {
+            $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
+                'query' => [
+                    'api_token' => $this->apiKey,
+                    'fmt'       => 'json',
+                    's'         => $symbols
+                ]
+            ]);
+        } catch (RequestException $e) {
+            $this->handlerror($e);
+        }
 
 
         return json_decode($response->getBody(), true);
