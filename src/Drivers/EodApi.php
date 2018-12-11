@@ -3,9 +3,13 @@
 namespace QikkerOnline\StockPricesApi\Drivers;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use QikkerOnline\StockPricesApi\Exceptions\HandlesResponseErrors;
 
 class EodApi implements StockPricesApiDriver
 {
+    use HandlesResponseErrors;
+
 
     const BASE_URL = 'https://eodhistoricaldata.com/';
     /**
@@ -30,13 +34,16 @@ class EodApi implements StockPricesApiDriver
      */
     public function getPrice(string $symbol)
     {
-
-        $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
-            'query' => [
-                'api_token' => $this->apiKey,
-                'fmt'       => 'json',
-            ]
-        ]);
+        try {
+            $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
+                'query' => [
+                    'api_token' => $this->apiKey,
+                    'fmt'       => 'json',
+                ]
+            ]);
+        } catch (RequestException $e) {
+            $this->handlerror($e);
+        }
 
         return json_decode($response->getBody(), true);
     }

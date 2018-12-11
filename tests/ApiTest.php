@@ -9,6 +9,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use QikkerOnline\StockPricesApi\Exceptions\ApiResponseError;
 
 class ApiTest extends TestCase
 {
@@ -123,5 +124,33 @@ class ApiTest extends TestCase
             $this->requestContainer[0]['request']->getUri()->getQuery());
     }
 
+
+    /** @test */
+    public function it_throws_an_api_response_error_on_a_400_response() {
+        $responses = [
+            new Response(400, [], '')
+        ];
+
+        $this->app->instance(Client::class, $this->setupGuzzleHandler($responses));
+
+        $this->expectException(ApiResponseError::class);
+        $this->expectExceptionMessage("The API responded with a Bad Request error, status code: 400, message: 'Bad Request'");
+
+        \StockPricesApi::getPrice('test');
+    }
+
+    /** @test */
+    public function it_throws_an_api_response_error_on_a_500_response() {
+        $responses = [
+            new Response(500, [], '')
+        ];
+
+        $this->app->instance(Client::class, $this->setupGuzzleHandler($responses));
+
+        $this->expectException(ApiResponseError::class);
+        $this->expectExceptionMessage("The API responded with an Internal Server error, status code: 500, message: 'Internal Server Error'");
+
+        \StockPricesApi::getPrice('test');
+    }
 
 }
