@@ -5,8 +5,6 @@ namespace QikkerOnline\StockPricesApi\Drivers;
 
 interface StockPricesApiDriver
 {
-    public function returnTrue():bool;
-
     public function getPrice(string $symbol);
 
     public function getBatch(array $symbols);

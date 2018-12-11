@@ -31,14 +31,6 @@ class ApiTest extends TestCase
         return new Client(['handler' => $stack]);
     }
 
-
-    /** @test */
-    public function it_returns_true()
-    {
-
-        $this->assertTrue(\StockPricesApi::returnTrue());
-    }
-
     /** @test */
     public function it_retrieves_the_price()
     {
