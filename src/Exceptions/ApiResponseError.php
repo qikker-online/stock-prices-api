@@ -2,15 +2,39 @@
 
 namespace QikkerOnline\StockPricesApi\Exceptions;
 
-class ApiResponseError extends \Exception
+use Exception;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+
+class ApiResponseError extends Exception
 {
-    public static function badRequest($statusCode, $message)
+    /**
+     * @param ClientException $e
+     *
+     * @return ApiResponseError
+     */
+    public static function badRequest(ClientException $e)
     {
-        return new static("The API responded with a Bad Request error, status code: {$statusCode}, message: '{$message}'");
+        return new static(
+            'The API responded with a Bad Request error, status code: ' . $e->getResponse()->getStatusCode() .
+            ', message: ' . $e->getResponse()->getBody(),
+            null,
+            $e
+        );
     }
 
-    public static function internalServerError($statusCode, $message)
+    /**
+     * @param ServerException $e
+     *
+     * @return ApiResponseError
+     */
+    public static function internalServerError(ServerException $e)
     {
-        return new static("The API responded with an Internal Server error, status code: {$statusCode}, message: '{$message}'");
+        return new static(
+            'The API responded with an Internal Server error, status code: ' . $e->getResponse()->getStatusCode() .
+            ', message: ' . $e->getResponse()->getBody(),
+            null,
+            $e
+        );
     }
 }

@@ -10,15 +10,17 @@ trait HandlesResponseErrors
 {
     /**
      * @param RequestException $e
+     *
+     * @throws ApiResponseError
      */
-    private function handlerror(RequestException $e)
+    private function handleError(RequestException $e)
     {
         if ($e instanceof ClientException) {
-            throw ApiResponseError::badRequest($e->getResponse()->getStatusCode(), $e->getResponse()->getReasonPhrase());
+            throw ApiResponseError::badRequest($e);
         } elseif ($e instanceof ServerException) {
-            throw ApiResponseError::internalServerError($e->getResponse()->getStatusCode(), $e->getResponse()->getReasonPhrase());
-        } else {
-            throw $e;
+            throw ApiResponseError::internalServerError($e);
         }
+
+        throw $e;
     }
 }

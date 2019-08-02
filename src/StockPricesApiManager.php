@@ -2,11 +2,10 @@
 
 namespace QikkerOnline\StockPricesApi;
 
-
-use GuzzleHttp\Client;
+use Exception;
 use Illuminate\Config\Repository;
-use QikkerOnline\StockPricesApi\Drivers\StockPricesApiDriver;
 use QikkerOnline\StockPricesApi\Drivers\EodApi;
+use QikkerOnline\StockPricesApi\Drivers\StockPricesApiDriver;
 
 class StockPricesApiManager
 {
@@ -19,20 +18,23 @@ class StockPricesApiManager
 
     /**
      * StockPricesApi constructor.
+     *
+     * @param Repository $config
+     *
+     * @throws Exception
      */
     public function __construct(Repository $config)
     {
         $this->config = $config;
 
         $this->api = $this->getApi();
-
     }
 
 
     /**
      * Resolves the current driver
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getApi(): StockPricesApiDriver
     {
@@ -42,12 +44,7 @@ class StockPricesApiManager
                 break;
 
             default:
-                throw new \Exception("Not a valid api driver selected");
+                throw new Exception("Not a valid api driver selected");
         }
     }
-
-
-
-
-
 }

@@ -4,6 +4,7 @@ namespace QikkerOnline\StockPricesApi\Drivers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use QikkerOnline\StockPricesApi\Exceptions\ApiResponseError;
 use QikkerOnline\StockPricesApi\Exceptions\HandlesResponseErrors;
 
 class EodApi implements StockPricesApiDriver
@@ -20,6 +21,8 @@ class EodApi implements StockPricesApiDriver
 
     /**
      * EodApi constructor.
+     *
+     * @param Client $guzzle
      */
     public function __construct(Client $guzzle)
     {
@@ -30,7 +33,9 @@ class EodApi implements StockPricesApiDriver
 
     /**
      * @param string $symbol
+     *
      * @return mixed
+     * @throws ApiResponseError
      */
     public function getPrice(string $symbol)
     {
@@ -42,7 +47,7 @@ class EodApi implements StockPricesApiDriver
                 ]
             ]);
         } catch (RequestException $e) {
-            $this->handlerror($e);
+            $this->handleError($e);
         }
 
         return json_decode($response->getBody(), true);
@@ -50,13 +55,14 @@ class EodApi implements StockPricesApiDriver
 
     /**
      * @param array $symbols
+     *
      * @return mixed
+     * @throws ApiResponseError
      */
     public function getBatch(array $symbols)
     {
         $symbol  = array_shift($symbols);
         $symbols = implode(',', $symbols);
-
 
         try {
             $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
@@ -67,16 +73,17 @@ class EodApi implements StockPricesApiDriver
                 ]
             ]);
         } catch (RequestException $e) {
-            $this->handlerror($e);
+            $this->handleError($e);
         }
-
 
         return json_decode($response->getBody(), true);
     }
 
     /**
      * @param string $symbol
+     *
      * @return string|null
+     * @throws ApiResponseError
      */
     public function getClosePrice(string $symbol)
     {
@@ -87,7 +94,9 @@ class EodApi implements StockPricesApiDriver
 
     /**
      * @param array $symbols
+     *
      * @return array
+     * @throws ApiResponseError
      */
     public function getBatchClosePrice(array $symbols)
     {

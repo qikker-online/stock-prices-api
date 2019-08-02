@@ -2,7 +2,6 @@
   "name": "qikker-online/stock-prices-api",
   "type": "laravel-package",
   "license": "MIT",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Marijn Hurkens",
@@ -16,7 +15,7 @@
     "ext-json": "*"
   },
   "require-dev": {
-    "orchestra/testbench": "~3.0"
+    "orchestra/testbench": "~3.8.0"
   },
   "extra": {
     "laravel": {

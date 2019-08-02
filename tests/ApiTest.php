@@ -3,11 +3,9 @@
 namespace QikkerOnline\StockPricesApi\Test;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use QikkerOnline\StockPricesApi\Exceptions\ApiResponseError;
 
@@ -17,6 +15,10 @@ class ApiTest extends TestCase
 
     /**
      * http://docs.guzzlephp.org/en/stable/testing.html
+     *
+     * @param array $responses
+     *
+     * @return Client
      */
     private function setupGuzzleHandler(array $responses)
     {
@@ -46,8 +48,10 @@ class ApiTest extends TestCase
         ], \StockPricesApi::getPrice('test'));
 
         $this->assertEquals('/api/real-time/test', $this->requestContainer[0]['request']->getUri()->getPath());
-        $this->assertEquals('api_token=for-example&fmt=json',
-            $this->requestContainer[0]['request']->getUri()->getQuery());
+        $this->assertEquals(
+            'api_token=for-example&fmt=json',
+            $this->requestContainer[0]['request']->getUri()->getQuery()
+        );
     }
 
 
@@ -71,8 +75,10 @@ class ApiTest extends TestCase
         ], \StockPricesApi::getBatch($symbols));
 
         $this->assertEquals('/api/real-time/first', $this->requestContainer[0]['request']->getUri()->getPath());
-        $this->assertEquals('api_token=for-example&fmt=json&s=second',
-            $this->requestContainer[0]['request']->getUri()->getQuery());
+        $this->assertEquals(
+            'api_token=for-example&fmt=json&s=second',
+            $this->requestContainer[0]['request']->getUri()->getQuery()
+        );
     }
 
     /** @test */
@@ -87,8 +93,10 @@ class ApiTest extends TestCase
         $this->assertEquals(15.66, \StockPricesApi::getClosePrice('test'));
 
         $this->assertEquals('/api/real-time/test', $this->requestContainer[0]['request']->getUri()->getPath());
-        $this->assertEquals('api_token=for-example&fmt=json',
-            $this->requestContainer[0]['request']->getUri()->getQuery());
+        $this->assertEquals(
+            'api_token=for-example&fmt=json',
+            $this->requestContainer[0]['request']->getUri()->getQuery()
+        );
     }
 
     /** @test */
@@ -126,29 +134,31 @@ class ApiTest extends TestCase
 
 
     /** @test */
-    public function it_throws_an_api_response_error_on_a_400_response() {
+    public function it_throws_an_api_response_error_on_a_400_response()
+    {
         $responses = [
-            new Response(400, [], '')
+            new Response(400, [], 'test body')
         ];
 
         $this->app->instance(Client::class, $this->setupGuzzleHandler($responses));
 
         $this->expectException(ApiResponseError::class);
-        $this->expectExceptionMessage("The API responded with a Bad Request error, status code: 400, message: 'Bad Request'");
+        $this->expectExceptionMessage("The API responded with a Bad Request error, status code: 400, message: test body");
 
         \StockPricesApi::getPrice('test');
     }
 
     /** @test */
-    public function it_throws_an_api_response_error_on_a_500_response() {
+    public function it_throws_an_api_response_error_on_a_500_response()
+    {
         $responses = [
-            new Response(500, [], '')
+            new Response(500, [], 'test body')
         ];
 
         $this->app->instance(Client::class, $this->setupGuzzleHandler($responses));
 
         $this->expectException(ApiResponseError::class);
-        $this->expectExceptionMessage("The API responded with an Internal Server error, status code: 500, message: 'Internal Server Error'");
+        $this->expectExceptionMessage("The API responded with an Internal Server error, status code: 500, message: test body");
 
         \StockPricesApi::getPrice('test');
     }
