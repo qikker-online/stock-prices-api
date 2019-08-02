@@ -4,6 +4,7 @@ namespace QikkerOnline\StockPricesApi\Drivers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 use QikkerOnline\StockPricesApi\Exceptions\ApiResponseError;
 use QikkerOnline\StockPricesApi\Exceptions\HandlesResponseErrors;
 
@@ -39,8 +40,12 @@ class EodApi implements StockPricesApiDriver
      */
     public function getPrice(string $symbol)
     {
+        $url = self::BASE_URL . 'api/real-time/' . $symbol;
+
+        Log::info('Calling EOD API on ' . $url);
+
         try {
-            $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
+            $response = $this->guzzle->get($url, [
                 'query' => [
                     'api_token' => $this->apiKey,
                     'fmt'       => 'json',
@@ -64,8 +69,12 @@ class EodApi implements StockPricesApiDriver
         $symbol  = array_shift($symbols);
         $symbols = implode(',', $symbols);
 
+        $url = self::BASE_URL . 'api/real-time/' . $symbol;
+
+        Log::info('Calling EOD API on ' . $url . ' - symbols: ' . $symbols);
+
         try {
-            $response = $this->guzzle->get(self::BASE_URL . 'api/real-time/' . $symbol, [
+            $response = $this->guzzle->get($url, [
                 'query' => [
                     'api_token' => $this->apiKey,
                     'fmt'       => 'json',
