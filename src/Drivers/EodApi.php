@@ -68,19 +68,29 @@ class EodApi implements StockPricesApiDriver
     {
         $symbol  = array_shift($symbols);
         $symbols = implode(',', $symbols);
+        $noAdditionalSymbols = empty($symbols);
 
         $url = self::BASE_URL . 'api/real-time/' . $symbol;
 
         Log::info('Calling EOD API on ' . $url . ' - symbols: ' . $symbols);
 
         try {
-            $response = $this->guzzle->get($url, [
-                'query' => [
-                    'api_token' => $this->apiKey,
-                    'fmt'       => 'json',
-                    's'         => $symbols
-                ]
-            ]);
+            if ($noAdditionalSymbols) {
+                $response = $this->guzzle->get($url, [
+                    'query' => [
+                        'api_token' => $this->apiKey,
+                        'fmt'       => 'json',
+                    ]
+                ]);
+            } else {
+                $response = $this->guzzle->get($url, [
+                    'query' => [
+                        'api_token' => $this->apiKey,
+                        'fmt'       => 'json',
+                        's'         => $symbols
+                    ]
+                ]);
+            }
         } catch (RequestException $e) {
             $this->handleError($e);
         }
